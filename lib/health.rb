@@ -2,5 +2,5 @@ require "health/version"
 require "health/engine"
 
 module Health
-  # Your code goes here...
+  autoload :Check, "health/check"
 end
