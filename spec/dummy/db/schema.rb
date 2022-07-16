@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_16_231217) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_16_234816) do
   create_table "health_check_records", force: :cascade do |t|
     t.datetime "ran_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "health_check_name", null: false
   end
 
 end
