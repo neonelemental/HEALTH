@@ -1,6 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require "shoulda-matchers"
+require "factory_bot"
 ENV['RAILS_ENV'] ||= 'test'
 require_relative './dummy/config/environment'
 # Prevent database truncation if the environment is production
@@ -72,3 +73,12 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
+end
+
