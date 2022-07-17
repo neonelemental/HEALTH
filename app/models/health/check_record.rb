@@ -9,7 +9,7 @@ module Health
       where(health_check_name: to_health_check_name(health_check_class, health_check_method)).
           order("created_at DESC").
           limit(1).
-          first.
+          first&.
           ran_at
     end
 

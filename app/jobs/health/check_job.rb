@@ -9,7 +9,7 @@ module Health
       health_check_method = job.arguments.second
 
       Health::CheckRecord.create!(
-        health_check_name: "#{health_check_class.to_s}##{health_check_method.to_s}",
+        health_check_name: Health::CheckRecord.to_health_check_name(health_check_class, health_check_method),
         ran_at: Time.zone.now
       )
     end
