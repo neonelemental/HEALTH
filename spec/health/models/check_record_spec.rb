@@ -1,5 +1,5 @@
 require "rails_helper"
-require "pry"
+
 describe Health::CheckRecord, type: :model do
   subject { Health::CheckRecord.new(health_check_name: "testerino", ran_at: Time.zone.now) }
 

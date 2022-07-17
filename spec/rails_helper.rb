@@ -2,6 +2,11 @@
 require 'spec_helper'
 require "shoulda-matchers"
 require "factory_bot"
+require "simplecov"
+require "pry"
+
+SimpleCov.start
+
 ENV['RAILS_ENV'] ||= 'test'
 require_relative './dummy/config/environment'
 # Prevent database truncation if the environment is production

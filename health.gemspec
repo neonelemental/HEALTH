@@ -19,4 +19,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "shoulda-matchers", "~> 5.0"
   spec.add_development_dependency "pry-rails"
   spec.add_development_dependency "factory_bot_rails"
+  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "timecop"
 end
