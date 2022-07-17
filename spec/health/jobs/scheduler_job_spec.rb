@@ -11,6 +11,6 @@ describe Health::SchedulerJob, active_job: true, type: :job do
   end
 
   it "schedules jobs health check jobs that need to be scheduled" do
-    expect(Health::CheckJob).to have_received(:perform_later).exactly(3).times
+    expect(Health::CheckJob).to have_received(:perform_later).exactly(4).times
   end
 end
