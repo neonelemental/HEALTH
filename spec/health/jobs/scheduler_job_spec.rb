@@ -5,6 +5,12 @@ describe Health::SchedulerJob, active_job: true, type: :job do
 
   subject { described_class.perform_now }
 
+  around do |example|
+    Timecop.freeze(Time.zone.now.at_beginning_of_week) do
+      example.run
+    end
+  end
+
   before do
     allow(Health::CheckJob).to receive(:perform_later)
     subject
