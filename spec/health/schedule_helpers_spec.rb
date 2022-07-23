@@ -63,7 +63,7 @@ describe Health::ScheduleHelpers do
   end
 
   describe ".should_run_weekday?" do
-    subject { described_class.should_run_weekday?(:mondays, last_ran_at) }
+    subject { described_class.send(:should_run_weekday?,:mondays, last_ran_at) }
 
     around do |example|
       Timecop.freeze(Time.zone.now.at_beginning_of_week) do
@@ -113,6 +113,127 @@ describe Health::ScheduleHelpers do
           Timecop.freeze(Time.zone.now.at_beginning_of_week+8.days)
 
           expect(subject).to be false
+        end
+      end
+    end
+  end
+
+  describe ".should_run_using_schedule?" do
+    subject { described_class.should_run_using_schedule?(schedule, last_ran_at) }
+
+    before do
+      Timecop.travel(time)
+    end
+
+    let(:time) { Time.zone.now } # sane default
+
+    context "and the schedule symbol is not recognized" do
+      let(:schedule) { :blahsdays }
+      let(:last_ran_at) { Time.zone.now }
+
+      it { is_expected.to be false }
+    end
+
+    context "when schedule is :beginning_of_month" do
+      let(:schedule) { :beginning_of_month }
+
+      context "and last_ran_at is nil" do
+        let(:last_ran_at) { nil }
+
+        context "and it's the beginning of the month" do
+          let(:time) { Time.zone.now.at_beginning_of_month }
+
+          it { is_expected.to be true }
+        end
+
+        context "and it's not the beginning of the month" do
+          let(:time) { Time.zone.now.at_beginning_of_month + 3.days }
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context "and last_ran_at is this month" do
+        let(:last_ran_at) { Time.zone.now.beginning_of_month }
+
+        context "and it's the beginning of the month" do
+          let(:time) { Time.zone.now.at_beginning_of_week }
+
+          it { is_expected.to be false }
+        end
+
+        context "and it's not the beginning of the month" do
+          let(:time) { Time.zone.now.at_beginning_of_month + 1.week }
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context "and last_ran_at is last month" do
+        let(:last_ran_at) { 1.month.ago.beginning_of_month }
+
+        context "and it's the beginning of the week" do
+          let(:time) { Time.zone.now.at_beginning_of_month }
+
+          it { is_expected.to be true }
+        end
+
+        context "and it's not the beginning of the week" do
+          let(:time) { Time.zone.now.at_beginning_of_week + 1.days }
+
+          it { is_expected.to be true }
+        end
+      end
+    end
+
+    context "when schedule is :end_of_month" do
+      let(:schedule) { :end_of_month }
+
+      context "and last_ran_at is nil" do
+        let(:last_ran_at) { nil }
+
+        context "and it's the end of the month" do
+          let(:time) { Time.zone.now.at_beginning_of_month - 3.weeks }
+
+          it { is_expected.to be false }
+        end
+
+        context "and it's not the end of the month" do
+          let(:time) { Time.zone.now.at_end_of_month.at_beginning_of_day + 1.hour }
+
+          it { is_expected.to be true }
+        end
+      end
+
+      context "and last_ran_at is this month" do
+        let(:last_ran_at) { Time.zone.now.end_of_month.at_beginning_of_day }
+
+        context "and it's the end of the month" do
+          let(:time) { Time.zone.now.at_end_of_month }
+
+          it { is_expected.to be false }
+        end
+
+        context "and it's not the end of the month" do
+          let(:time) { Time.zone.now.at_end_of_month - 1.week }
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context "and last_ran_at is last month" do
+        context "and it's the end of the month" do
+          let(:last_ran_at) { (Time.zone.now - 32.days).at_end_of_month }
+          let(:time) { Time.zone.now.at_end_of_month }
+
+          it { is_expected.to be true }
+        end
+
+        context "and it's not the end of the month" do
+          let(:last_ran_at) { (Time.zone.now - 32.days - 1.week).at_end_of_month }
+          let(:time) { Time.zone.now.at_end_of_month + 1.week }
+
+          it { is_expected.to be true }
         end
       end
     end
