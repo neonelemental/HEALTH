@@ -9,6 +9,7 @@ module Health
 
       def setup_health_checks_dir
         directory "app/health_checks"
+        directory "config/initializers"
       end
     end
   end
