@@ -17,7 +17,7 @@ describe Health::Scheduler do
 
     context "when a frequency is passed" do
       context "when the health check has not been run within its specified frequency" do
-        let!(:record) { FactoryBot.create(:health_check_record, ran_at: Time.zone.now - 2.days) }
+        let!(:record) { FactoryBot.create(:health_check_run, ran_at: Time.zone.now - 2.days) }
 
         it "returns true" do
           expect(schedule_health_check?).to be true
@@ -26,13 +26,13 @@ describe Health::Scheduler do
 
       context "when the health check has never been run" do
         it "returns true" do
-          expect(Health::CheckRecord.count).to be 0
+          expect(Health::CheckRun.count).to be 0
           expect(schedule_health_check?).to be true
         end
       end
 
       context "when the health check has been run within its specified frequency" do
-        let!(:record) { FactoryBot.create(:health_check_record, ran_at: Time.zone.now - 23.hours) }
+        let!(:record) { FactoryBot.create(:health_check_run, ran_at: Time.zone.now - 23.hours) }
 
         it "returns false" do
           expect(schedule_health_check?).to be false
@@ -48,7 +48,7 @@ describe Health::Scheduler do
       end
 
       context "and the health check has been run on schedule" do
-        let!(:record) { FactoryBot.create(:health_check_record, ran_at: Time.zone.now - 1.day) }
+        let!(:record) { FactoryBot.create(:health_check_run, ran_at: Time.zone.now - 1.day) }
 
         it "returns false" do
           expect(schedule_health_check?).to be false
@@ -56,7 +56,7 @@ describe Health::Scheduler do
       end
 
       context "and the health check has not been run on schedule" do
-        let!(:record) { FactoryBot.create(:health_check_record, ran_at: Time.zone.now - 1.week) }
+        let!(:record) { FactoryBot.create(:health_check_run, ran_at: Time.zone.now - 1.week) }
 
         it "returns true" do
           expect(schedule_health_check?).to be true

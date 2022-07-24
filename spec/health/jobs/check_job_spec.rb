@@ -13,7 +13,7 @@ describe Health::CheckJob, active_job: true, type: :job do
   end
 
   before do
-    allow(Health::CheckRecord).to receive(:create!).and_return(true)
+    allow(Health::CheckRun).to receive(:create!).and_return(true)
   end
 
   describe "#perform" do
@@ -34,7 +34,7 @@ describe Health::CheckJob, active_job: true, type: :job do
     end
 
     it "creates a new HealthCheck::Record" do
-      expect(Health::CheckRecord).to have_received(:create!).
+      expect(Health::CheckRun).to have_received(:create!).
           with(hash_including({ health_check_name: "MockHealthCheck#example"}))
     end
   end

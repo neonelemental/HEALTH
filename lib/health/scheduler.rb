@@ -20,7 +20,7 @@ module Health
     end
 
     def schedule_health_check?(health_check_class, health_check_method, frequency_or_schedule)
-      last_ran_at = Health::CheckRecord.last_ran_at(health_check_class, health_check_method)
+      last_ran_at = Health::CheckRun.last_ran_at(health_check_class, health_check_method)
 
       if Health::ScheduleHelpers.is_frequency?(frequency_or_schedule)
         Health::ScheduleHelpers.should_run_using_frequency?(frequency_or_schedule, last_ran_at)
