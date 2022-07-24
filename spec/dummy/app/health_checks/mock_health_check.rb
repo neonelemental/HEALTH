@@ -14,14 +14,18 @@ class MockHealthCheck < Health::Check
   private
 
   def example
+    []
   end
 
   def another_example
+    []
   end
 
   def yet_another_example
+    []
   end
 
   def last_example
+    []
   end
 end

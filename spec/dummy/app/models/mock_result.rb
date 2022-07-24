@@ -1,0 +1,2 @@
+class MockResult < ApplicationRecord
+end

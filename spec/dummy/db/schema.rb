@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_24_000229) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_24_012308) do
   create_table "health_check_results", force: :cascade do |t|
     t.string "resultable_type"
     t.integer "resultable_id"
@@ -25,6 +25,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_24_000229) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "health_check_name", null: false
+  end
+
+  create_table "mock_results", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "health_check_results", "health_check_runs"

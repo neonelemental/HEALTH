@@ -5,17 +5,21 @@ module Health
         "Performing health check #{Health::CheckRun.to_health_check_name(health_check_class, health_check_method)}"
       )
 
-      health_check_class.new.send(health_check_method)
-    end
-
-    after_perform do |job|
-      health_check_class = job.arguments.first
-      health_check_method = job.arguments.second
-
-      Health::CheckRun.create!(
+      results = health_check_class.new.send(health_check_method)
+      run = Health::CheckRun.new(
         health_check_name: Health::CheckRun.to_health_check_name(health_check_class, health_check_method),
         ran_at: Time.zone.now
       )
+      run.save!
+      run.reload
+
+      results.map do |result|
+        Health::CheckResult.create!(
+          resultable_type: result.class.to_s,
+          resultable_id: result.id,
+          health_check_run: run,
+        )
+      end
     end
   end
 end

@@ -5,6 +5,13 @@ describe Health::CheckJob, active_job: true, type: :job do
 
   let!(:mock_health_check) { MockHealthCheck }
   let!(:mock_instance) { mock_health_check.new }
+  let(:mock_results) { [MockResult.create, MockResult.create] }
+
+  class MockResult
+    def id
+      1
+    end
+  end
 
   subject(:health_check_job) do
     perform_enqueued_jobs do
@@ -19,23 +26,15 @@ describe Health::CheckJob, active_job: true, type: :job do
   describe "#perform" do
     before do
       allow(mock_health_check).to receive(:new).and_return(mock_instance)
-      allow(mock_instance).to receive(:example)
-      subject
+      allow(mock_instance).to receive(:example).and_return(mock_results)
     end
 
-    it "instantiates a health_check_class and calls the health_check_method" do
-      expect(mock_instance).to have_received(:example)
-    end
-  end
-
-  describe "#after_perform" do
-    before do
-      subject
+    it "creates a Health::CheckRun record" do
+      expect { subject }.to change { Health::CheckRun.count }.by(1)
     end
 
-    it "creates a new HealthCheck::Record" do
-      expect(Health::CheckRun).to have_received(:create!).
-          with(hash_including({ health_check_name: "MockHealthCheck#example"}))
+    it "creates two Health::CheckResults record" do
+      expect { subject }.to change { Health::CheckResult.count }.by(2)
     end
   end
 end
