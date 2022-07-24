@@ -1,3 +1,3 @@
 Health.configure do |config|
-  config.notifications_to = "change+me@example.com"
+  config.notifications_to = "test@example.com"
 end

@@ -13,13 +13,18 @@ module Health
       run.save!
       run.reload
 
-      results.map do |result|
+      results.each do |result|
         Health::CheckResult.create!(
           resultable_type: result.class.to_s,
           resultable_id: result.id,
           health_check_run: run,
         )
       end
+
+      Health::NotificationsMailer.with(
+        run: run,
+        results: results,
+      ).alert.deliver_later
     end
   end
 end

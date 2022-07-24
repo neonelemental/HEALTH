@@ -1,0 +1,17 @@
+<h1>
+  <%= @health_check_run.health_check_name %> failed!
+</h1>
+<hr/>
+<p>
+  The following results were surfaced while performing the health check <%= @health_check_run.health_check_name %>.
+</p>
+<table>
+  <tbody>
+    <% @health_check_results.each do |result| %>
+      <tr>
+        <td>Type: <%= result.class.name %></td>
+        <td>ID: <%= result.id %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

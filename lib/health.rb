@@ -8,7 +8,11 @@ module Health
   autoload :ScheduleHelpers, "health/schedule_helpers"
   autoload :Configuration, "health/configuration"
 
+  def self.configuration
+    @@configuration ||= Health::Configuration.new
+  end
+
   def self.configure
-    yield Health::Configuration
+    yield configuration
   end
 end

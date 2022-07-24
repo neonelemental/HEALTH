@@ -2,21 +2,14 @@ require "rails_helper"
 
 describe Health::CheckJob, active_job: true, type: :job do
   include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   let!(:mock_health_check) { MockHealthCheck }
   let!(:mock_instance) { mock_health_check.new }
   let(:mock_results) { [MockResult.create, MockResult.create] }
 
-  class MockResult
-    def id
-      1
-    end
-  end
-
   subject(:health_check_job) do
-    perform_enqueued_jobs do
-      described_class.perform_later(mock_health_check, :example)
-    end
+    described_class.perform_now(mock_health_check, :example)
   end
 
   before do
@@ -35,6 +28,13 @@ describe Health::CheckJob, active_job: true, type: :job do
 
     it "creates two Health::CheckResults record" do
       expect { subject }.to change { Health::CheckResult.count }.by(2)
+    end
+
+    it "delivers an email" do
+      expect { subject }.to change { ActiveJob::Base.queue_adapter.enqueued_jobs.size }.by(1)
+
+      expect(ActiveJob::Base.queue_adapter.enqueued_jobs.first["arguments"]).
+          to include("Health::NotificationsMailer", "alert")
     end
   end
 end

@@ -1,8 +1,8 @@
 module Health
   class ConfigurationError < StandardError; end
 
-  module Configuration
-    extend self
+  class Configuration
+    attr_writer :notifications_to
 
     def notifications_to
       if @notifications_to.nil? || @notifications_to == "change+me@example.com"
@@ -10,10 +10,6 @@ module Health
       end
 
       @notifications_to
-    end
-
-    def notifications_to=(email)
-      @notifications_to = email
     end
   end
 end
