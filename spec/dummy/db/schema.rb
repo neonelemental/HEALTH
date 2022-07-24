@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_23_235120) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_24_000229) do
+  create_table "health_check_results", force: :cascade do |t|
+    t.string "resultable_type"
+    t.integer "resultable_id"
+    t.integer "health_check_run_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resultable_type", "resultable_id"], name: "index_health_check_results_on_resultable"
+  end
+
   create_table "health_check_runs", force: :cascade do |t|
     t.datetime "ran_at"
     t.datetime "created_at", null: false
@@ -18,4 +27,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_23_235120) do
     t.string "health_check_name", null: false
   end
 
+  add_foreign_key "health_check_results", "health_check_runs"
 end
